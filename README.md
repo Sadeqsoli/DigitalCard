@@ -58,6 +58,10 @@ docs/           Architecture and repository guidance
 .github/        CI workflows
 ```
 
+## Engineering and architecture
+
+All contributors and coding agents must read [AGENTS.md](AGENTS.md), the nearest folder-specific `AGENTS.md`, and [ARCHITECTURE.md](ARCHITECTURE.md) before making changes. The architecture entry point links the canonical product, privacy, database, contact, identity-matching, sharing, security, API, and ADR documentation.
+
 ## Bootstrap decisions
 
 - The workspace requires Node 22.13+ because Expo SDK 57 targets that minimum. The package manager version is pinned for reproducible installs.
