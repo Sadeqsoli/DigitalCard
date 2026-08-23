@@ -1,0 +1,13 @@
+{
+  "extends": ["expo/tsconfig.base", "../../packages/config/typescript/base.json"],
+  "compilerOptions": {
+    "allowJs": false,
+    "declaration": false,
+    "jsx": "react-native",
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+}

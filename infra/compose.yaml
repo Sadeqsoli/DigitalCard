@@ -1,0 +1,24 @@
+name: digitalcard
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-digitalcard}
+      POSTGRES_USER: ${POSTGRES_USER:-digitalcard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-digitalcard}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-digitalcard} -d ${POSTGRES_DB:-digitalcard}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

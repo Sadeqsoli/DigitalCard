@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "DigitalCard",
+    "slug": "digitalcard",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "scheme": "digitalcard",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.digitalcard.mobile"
+    }
+  }
+}
