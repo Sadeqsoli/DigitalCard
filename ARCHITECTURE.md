@@ -1,6 +1,6 @@
 # DigitalCard architecture
 
-This is the canonical architecture entry point. DigitalCard is a universal identity, contact-management, and profile-sharing platform for iOS, Android, and Web. The repository currently contains framework foundations only; it has no product modules, authentication, API endpoints, or domain database tables.
+This is the canonical architecture entry point. DigitalCard is a universal identity, contact-management, and profile-sharing platform for iOS, Android, and Web. The repository contains the framework foundation and the V1 server persistence model. It still has no product API endpoints, authentication flows, or product UI.
 
 All contributors and agents must read [AGENTS.md](AGENTS.md) plus the nearest scoped `AGENTS.md` before making changes.
 
@@ -44,6 +44,12 @@ Three identity concepts are deliberately separate:
 - A `Person` is a user's imported contact representation and may not correspond to a DigitalCard user.
 
 Never collapse these into one persistence entity. A later identity match creates a link opportunity, not an automatic merge.
+
+## Persistence baseline
+
+PostgreSQL 17 holds server-authoritative account, profile, sharing, organization, connection, notification, and privacy state. Better Auth owns its generated core tables; DigitalCard owns the business tables. Full imported address-book records remain local to the future mobile SQLite store by default, while PostgreSQL stores only keyed discovery tokens needed for matching. See [database architecture](docs/DATABASE.md) and [ADR 0001](docs/decisions/0001-server-local-contact-data-split.md).
+
+Application-owned business records use application-generated UUIDv7 identifiers. Better Auth uses its supported UUID strategy for library-owned records. See [ADR 0002](docs/decisions/0002-database-id-strategy.md).
 
 ## Cross-cutting invariants
 

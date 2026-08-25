@@ -40,4 +40,10 @@ What benefits, costs, risks, migrations, and follow-up work result?
 Which credible alternatives were rejected, and why?
 ```
 
-The first implementation of private sharing, privacy-preserving identity matching, core domain persistence, organization authorization, or production deployment is expected to require one or more ADRs because important choices remain unresolved.
+## Accepted records
+
+- [ADR 0001: Keep full imported contacts local by default](0001-server-local-contact-data-split.md)
+- [ADR 0002: Separate Better Auth and business ID strategies](0002-database-id-strategy.md)
+- [ADR 0003: Establish V1 sharing persistence contexts](0003-v1-sharing-persistence.md)
+
+The first implementation of matching token construction, organization authorization, sharing authorization behavior, or production deployment is expected to require further ADRs because important choices remain unresolved.

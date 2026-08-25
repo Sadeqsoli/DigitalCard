@@ -1,6 +1,6 @@
 # DigitalCard
 
-Production-grade monorepo foundation for the DigitalCard mobile client, API, and shared packages. This bootstrap intentionally contains no product features, authentication, or database domain model.
+Production-grade monorepo foundation for the DigitalCard mobile client, API, and shared packages. It includes the V1 PostgreSQL persistence schema but intentionally contains no product APIs, authentication flows, or product UI.
 
 ## Prerequisites
 
@@ -17,6 +17,28 @@ pnpm install
 Copy-Item .env.example .env # PowerShell; use `cp` on macOS/Linux
 docker compose --env-file .env -f infra/compose.yaml up -d
 ```
+
+Database integration tests use a separate, ephemeral PostgreSQL service and refuse the normal development database:
+
+```sh
+docker compose --env-file .env --profile test -f infra/compose.yaml up -d postgres-test
+export TEST_DATABASE_URL=postgresql://digitalcard:digitalcard@localhost:5433/digitalcard_test
+pnpm --filter @digitalcard/database db:test
+```
+
+In PowerShell, set the variable with `$env:TEST_DATABASE_URL='postgresql://digitalcard:digitalcard@localhost:5433/digitalcard_test'` instead of `export`. These are local example credentials only.
+
+Apply the committed migration and load the optional development seed into the normal local database:
+
+```sh
+export DATABASE_URL=postgresql://digitalcard:digitalcard@localhost:5432/digitalcard
+pnpm --filter @digitalcard/database db:migrate
+pnpm --filter @digitalcard/database db:seed
+```
+
+In PowerShell, use `$env:DATABASE_URL='postgresql://digitalcard:digitalcard@localhost:5432/digitalcard'`.
+
+Database development uses `db:generate` to create reviewed migrations and `db:check` to validate migration metadata. Shared environments must never use schema push.
 
 Run the development processes separately:
 
@@ -39,7 +61,7 @@ pnpm test
 pnpm build
 ```
 
-`pnpm lint` also checks Prettier formatting. Tests currently pass with no test files because this bootstrap has no product behavior to test.
+`pnpm lint` also checks Prettier formatting. Root `pnpm test` runs non-destructive unit tests and does not require PostgreSQL. Destructive constraint tests are intentionally separate: start the dedicated test service, set `TEST_DATABASE_URL`, and run `pnpm --filter @digitalcard/database db:test`. CI runs both suites.
 
 ## Repository layout
 
@@ -48,7 +70,7 @@ apps/
   mobile/       Expo SDK 57 application with Expo Router
   api/          NestJS application using the Fastify adapter
 packages/
-  database/     Drizzle/PostgreSQL package; schema is intentionally empty
+  database/     Drizzle/PostgreSQL V1 schema, migrations, seed, and integration tests
   contracts/    Shared transport-contract boundary
   ui/           Shared UI boundary
   config/       Shared strict TypeScript configuration
@@ -68,9 +90,10 @@ All contributors and coding agents must read [AGENTS.md](AGENTS.md), the nearest
 - Turborepo owns the workspace task graph. Builds and type checks run dependency-first and cache generated output.
 - TypeScript strictness lives in `packages/config/typescript/base.json`. Expo extends its own required base first and then the repository base; Nest overrides only its module/decorator requirements.
 - Workspace packages expose only their public `src/index.ts` entry point. No application currently depends on another workspace, preventing accidental coupling during bootstrap.
-- PostgreSQL 17 runs only for local development. Example credentials are non-production placeholders, and the database is not required for foundation linting, testing, type checking, or building.
-- Drizzle is installed in `@digitalcard/database`, but `schema.ts` exports no tables and no migrations exist.
-- Better Auth is a fixed future architecture choice but is deliberately not installed or configured until authentication work begins.
+- PostgreSQL 17 runs for local development and real database integration tests. Example credentials are non-production placeholders; destructive tests refuse the normal development database.
+- Drizzle owns a modular V1 schema and an immutable generated SQL migration. Business IDs are application-generated UUIDv7 values.
+- Better Auth's pinned stable tooling owns and generates the core auth persistence schema with UUID-compatible IDs. Authentication behavior remains unimplemented.
+- Full imported address-book data remains in the future mobile SQLite boundary by default; PostgreSQL stores only privacy-preserving discovery representations.
 - Mobile `build` performs an Android production export. Native store binaries remain an EAS/native-toolchain concern and are outside this foundation.
 - The minimal mobile route renders an empty root view, and the API declares only an empty Nest module. These validate framework wiring without adding starter/example behavior.
 

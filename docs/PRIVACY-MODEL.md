@@ -40,4 +40,4 @@ Broad installed-app scanning is prohibited. Android and iOS expose different cap
 - Persistence and query design must make privacy-safe access paths reviewable.
 - Logs, analytics, traces, and error reports must exclude personal data and secrets.
 
-Data retention, account deletion, legal export, and consent-audit requirements need explicit product/legal decisions before their persistence design is finalized.
+The V1 server schema records product-level grant/revoke transitions in append-only `consent_events`; it does not mirror operating-system permission databases. Retention periods, account-deletion semantics, legal export, consent vocabulary, and policy-version requirements still need explicit product/legal decisions before their behavior is implemented.

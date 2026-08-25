@@ -12,17 +12,26 @@
     }
   },
   "scripts": {
+    "auth:generate": "auth generate --config ./auth.config.ts --output ./src/schema/auth/generated.ts --yes",
     "build": "tsc -p tsconfig.json",
+    "db:check": "drizzle-kit check",
     "db:generate": "drizzle-kit generate",
-    "lint": "eslint src drizzle.config.ts --max-warnings 0",
-    "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.tools.json"
+    "db:migrate": "pnpm build && node dist/migrate.js",
+    "db:seed": "pnpm build && node dist/seed.js",
+    "db:test": "vitest run test/database.integration.test.ts",
+    "lint": "eslint src test auth.config.ts drizzle.config.ts --max-warnings 0",
+    "test": "vitest run --exclude test/database.integration.test.ts",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.tools.json && tsc -p tsconfig.test.json"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
-    "postgres": "3.4.9"
+    "postgres": "3.4.9",
+    "uuid": "14.0.2"
   },
   "devDependencies": {
+    "@better-auth/drizzle-adapter": "1.7.1",
+    "auth": "1.7.1",
+    "better-auth": "1.7.1",
     "drizzle-kit": "0.31.10"
   }
 }

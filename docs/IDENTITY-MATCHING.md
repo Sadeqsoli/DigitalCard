@@ -22,7 +22,14 @@ Normalization must be defined per identifier type and occur before token constru
 - Sensitive discovery material must use an approved keyed server-side construction, such as HMAC, with key separation and rotation considerations.
 - Matching output must not become a public enumeration endpoint or disclose whether arbitrary people use DigitalCard.
 
-The exact token protocol is deliberately not defined yet. Before implementation, an ADR and threat review must resolve normalization rules, where tokens are constructed, key custody/rotation, replay and enumeration resistance, deletion/retention, false-positive handling, rate limits, and how verified identifiers enter or leave the match set.
+The V1 PostgreSQL schema contains two server-side discovery tables:
+
+- `user_identifiers` stores a DigitalCard user's verified identifier kind, keyed match token, key version, verification time, and optional revocation time.
+- `contact_match_tokens` stores an importing user's opaque `contact_ref`, identifier kind, keyed match token, key version, and retention timestamps.
+
+Neither table is a profile-display source. `contact_match_tokens` deliberately has no display name, raw phone, raw email, social username, company, or address-book metadata. Full People, sources, and fields remain in the future mobile SQLite store by default as described in [DATABASE.md](DATABASE.md) and [ADR 0001](decisions/0001-server-local-contact-data-split.md).
+
+The schema supports versioned keyed tokens and efficient equality matching, but the exact token protocol is deliberately not defined yet. Before runtime implementation, an ADR and threat review must resolve normalization rules, where tokens are constructed, key custody/rotation, replay and enumeration resistance, deletion/retention, false-positive handling, rate limits, and how verified identifiers enter or leave the match set.
 
 ## Match lifecycle invariant
 

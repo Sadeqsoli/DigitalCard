@@ -1,6 +1,6 @@
 # Product model
 
-DigitalCard provides identity profiles, contact management, and deliberate profile sharing. This document defines the agreed product concepts without prescribing an unapproved persistence design.
+DigitalCard provides identity profiles, contact management, and deliberate profile sharing. This document defines the agreed product concepts and boundaries reflected by the V1 server persistence model without prescribing unapproved service behavior.
 
 See [the architecture entry point](../ARCHITECTURE.md), [privacy model](PRIVACY-MODEL.md), and [sharing model](SHARING-MODEL.md).
 
@@ -21,8 +21,8 @@ See [the architecture entry point](../ARCHITECTURE.md), [privacy model](PRIVACY-
 - **People / Contact Sources:** user-owned contact representations and provenance.
 - **Identity Matching:** evidence-based discovery of a possible relationship between a Person and a DigitalCard user.
 - **Sharing:** explicit contexts that grant access to eligible profile data.
-- **Connections:** relationship state between DigitalCard participants; exact semantics remain to be decided.
-- **Organizations:** organizational identity and access relationships; ownership/role semantics remain to be decided.
+- **Connections:** one relationship record between an unordered pair of users, optionally carrying profile context. Transition and authorization semantics remain to be decided.
+- **Organizations:** organization metadata and unique user memberships with owner/admin/member roles. Invitation, role-transition, and authorization semantics remain to be decided; profiles remain user-owned in V1.
 - **Files:** metadata and authorized access for stored content; storage architecture remains to be decided.
 - **Notifications:** durable user notification records and independent delivery attempts.
 
